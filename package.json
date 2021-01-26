@@ -1,33 +1,73 @@
 {
-  "name": "svelte-esbuild-starter",
-  "version": "0.1.1",
+  "author": "Alexey Schebelev",
+  "bugs": {
+    "url": "https://github.com/AlexxNB/svelte-esbuild-starter/issues"
+  },
+  "dependencies": {
+    "minimist": "^1.2.5"
+  },
   "description": "Starter for new Svelte application with ESBuild bundler ",
-  "main": "index.js",
-  "scripts": {
-    "build": "node esbuild",
-    "dev": "node esbuild --dev",
-    "start": "npx derver --production --port=5000 public"
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.3",
+    "derver": "^0.4.12",
+    "eol-converter-cli": "^1.0.8",
+    "esbuild": "^0.8.36",
+    "esbuild-svelte": "^0.4.0",
+    "eslint": "^7.18.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-svelte3": "^3.0.0",
+    "prettier": "^2.2.1",
+    "prettier-plugin-svelte": "^2.1.1",
+    "prettier-standard": "^16.4.1",
+    "svelte": "^3.32.0",
+    "typescript": "^4.1.3"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlexxNB/svelte-esbuild-starter.git"
-  },
+  "homepage": "https://github.com/AlexxNB/svelte-esbuild-starter#readme",
   "keywords": [
     "svelte",
     "starter",
     "derver",
     "esbuild"
   ],
-  "author": "Alexey Schebelev",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/AlexxNB/svelte-esbuild-starter/issues"
+  "main": "index.js",
+  "name": "svelte-esbuild-starter",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexxNB/svelte-esbuild-starter.git"
   },
-  "homepage": "https://github.com/AlexxNB/svelte-esbuild-starter#readme",
-  "devDependencies": {
-    "derver": "^0.4.12",
-    "esbuild": "^0.8.34",
-    "esbuild-svelte": "^0.4.0",
-    "svelte": "^3.31.2"
-  }
+  "scripts": {
+    "build": "node esbuild",
+    "dev": "node esbuild --dev",
+    "start": "npx derver --production --port=5000 public",
+    "tool:format": "npm run tool:format:package && npm run tool:format:code",
+    "tool:format:bench": "npm run tool:hereis:gnomon && ( npm run tool:format | gnomon )",
+    "tool:format:code": "npm run tool:prettier:format",
+    "tool:format:package": "npm run tool:sort:package",
+    "tool:hereis": "cross-env-shell \"( which $HEREIS_TOOL_CLI ) || ( where -q $HEREIS_TOOL_CLI ) || ( npm i --save-dev $HEREIS_TOOL ) || ( sudo npm i --save-dev $HEREIS_TOOL )\"",
+    "tool:hereis:cross-env": "( which cross-env ) || ( where -q cross-env ) || ( npm i --save-dev cross-env ) || ( sudo npm i --save-dev cross-env )",
+    "tool:hereis:eol-converter-cli": "npm run tool:hereis:cross-env && cross-env-shell HEREIS_TOOL_CLI=eolConverter HEREIS_TOOL=eol-converter-cli \"npm run tool:hereis\"",
+    "tool:hereis:eslint": "( ( which eslint ) || ( where -q eslint ) || ( npm run tool:install:eslint ) )",
+    "tool:hereis:gnomon": "npm run tool:hereis:cross-env && cross-env-shell HEREIS_TOOL=gnomon \"npm run tool:hereis:simple\"",
+    "tool:hereis:jq": "( which jq ) || ( where -q jq ) || ( scoop i jq ) || ( sudo apt -y install jq )",
+    "tool:hereis:prettier": "( ( which prettier ) || ( where -q prettier ) || ( npm run tool:install:prettier ) )",
+    "tool:hereis:simple": "cross-env-shell HEREIS_TOOL_CLI=$HEREIS_TOOL \"npm run tool:hereis\"",
+    "tool:hereis:upd": "npm run tool:hereis:cross-env && cross-env-shell HEREIS_TOOL=upd \"npm run tool:hereis:simple\"",
+    "tool:info": "which",
+    "tool:install": "npm run tool:format:package && npm run tool:update:package && npm run tool:install:simple",
+    "tool:install:eslint": "npm i --save-dev babel-eslint eslint eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-prettier eslint-plugin-promise eslint-plugin-svelte3",
+    "tool:install:prettier": "npm i --save-dev prettier prettier-plugin-svelte prettier-standard svelte typescript",
+    "tool:install:simple": "npm prune && npm i && ( npm audit fix || true )",
+    "tool:lint": "npm run tool:hereis:eslint && eslint --fix .",
+    "tool:prettier:format": "npm run tool:hereis:prettier && prettier --write .",
+    "tool:sort:package": "npm run tool:hereis:jq && ( jq -S . package.json > package_sorted.json ) && ( mv package_sorted.json package.json || move package_sorted.json package.json >nul 2>nul ) && ( npm run tool:hereis:eol-converter-cli ) && eolConverter package.json",
+    "tool:update:package": "npm run tool:hereis:upd && npx upd -a -c 4",
+    "tool:update:package:bench": "npm run tool:hereis:gnomon && ( npm run tool:update:package | gnomon )"
+  },
+  "version": "0.1.1"
 }
